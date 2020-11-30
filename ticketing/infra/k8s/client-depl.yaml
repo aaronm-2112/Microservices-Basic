@@ -1,0 +1,30 @@
+apiVersion: apps/v1 
+kind: Deployment 
+metadata:
+  name: client-depl 
+spec: 
+  replicas: 1 
+  selector: 
+    matchLabels:
+      app: client 
+  template: #how everything should behave
+    metadata:
+      labels:
+        app: client
+    spec:
+      containers:
+        - name: client 
+          image: us.gcr.io/ticketing-dev-293022/client
+---
+apiVersion: v1
+kind: Service 
+metadata:
+  name: client-srv 
+spec:
+  selector: # how the service finds the correct pods to govern
+    app: client 
+  ports:
+    - name: client # name is IMP for logging and reporting
+      protocol: TCP
+      port: 3000 # nextjs defaults to port 3000
+      targetPort: 3000
