@@ -30,7 +30,7 @@ build:
         dockerfile: Dockerfile 
       sync:
         manual:
-          - src: '**/*.js'
+          - src: '**/*.ts'
             dest: .
     - image: us.gcr.io/ticketing-dev-293022/orders
       context: orders 
@@ -38,5 +38,13 @@ build:
         dockerfile: Dockerfile 
       sync:
         manual:
-          - src: '**/*.js'
+          - src: '**/*.ts'
+            dest: .
+    - image: us.gcr.io/ticketing-dev-293022/expiration
+      context: expiration 
+      docker:
+        dockerfile: Dockerfile 
+      sync:
+        manual:
+          - src: '**/*.ts'
             dest: .
