@@ -56,7 +56,7 @@ orderSchema.set('versionKey', 'version')
 orderSchema.plugin(updateIfCurrentPlugin)
 
 // order of statics using build and creating the model matters
-orderSchema.statics.build = ((attrs: OrderAttrs) => {
+orderSchema.static('build', (attrs: OrderAttrs) => {
   return new Order(attrs)
 })
 

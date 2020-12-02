@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema({
 
 
 // done is a mongoose call back requirement; pre is a hook 
-userSchema.pre('save', async function (done) {
+userSchema.pre('save', async function (done: mongoose.HookNextFunction): Promise<void> {
   // hash the user's password when it is created/edited
   if (this.isModified('password')) {
     const hashed = await Password.toHash(this.get('password'))
@@ -59,9 +59,9 @@ userSchema.pre('save', async function (done) {
 })
 
 // tell mongoose there is a new method available to userSchema 
-userSchema.statics.build = (attrs: UserAttrs) => {
+userSchema.static('build', (attrs: UserAttrs) => {
   return new User(attrs)
-}
+})
 
 const User = mongoose.model<UserDoc, UserModel>('User', userSchema)
 
