@@ -48,14 +48,15 @@ const userSchema = new mongoose.Schema({
 
 
 // done is a mongoose call back requirement; pre is a hook 
-userSchema.pre('save', async function (done: mongoose.HookNextFunction): Promise<void> {
+userSchema.pre('save', async function (done) {
   // hash the user's password when it is created/edited
   if (this.isModified('password')) {
-    const hashed = await Password.toHash(this.get('password'))
-    this.set('password', hashed)
+    const hashed = await Password.toHash(this.get('password'));
+    this.set('password', hashed);
   }
   // call done to indicate the async method is complete
-  done()
+  // @ts-ignore
+  done(undefined);
 })
 
 // tell mongoose there is a new method available to userSchema 

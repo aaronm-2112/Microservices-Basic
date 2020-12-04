@@ -9,7 +9,7 @@ import { natsWrapper } from '../nats-wrapper'
 
 const router = express.Router()
 
-const EXPIRATION_WINDOW_SECONDS = 15 * 60
+const EXPIRATION_WINDOW_SECONDS = 1 * 60
 
 
 // custom: determines if user has a valid mongoId. Couples this route to other services. Can delete if planning on using other DBs
