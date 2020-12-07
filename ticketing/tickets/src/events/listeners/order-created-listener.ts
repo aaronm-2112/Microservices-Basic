@@ -10,6 +10,7 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
   readonly subject = Subjects.OrderCreated
 
   async onMessage(data: OrderCreatedEvent['data'], msg: Message) {
+    console.log(data)
     // Find the ticket that the order is reserving
     const ticket = await Ticket.findById(data.ticket.id)
 

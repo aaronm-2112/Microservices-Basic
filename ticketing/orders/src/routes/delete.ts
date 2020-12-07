@@ -11,6 +11,8 @@ router.delete('/api/orders/:orderId', requireAuth, async (req: Request, res: Res
 
   const order = await Order.findById(orderId).populate('ticket')
 
+  console.log(`In delete order's ticket is: ${order!.ticket}`)
+
   if (!order) {
     throw new NotFoundError()
   }
@@ -21,6 +23,7 @@ router.delete('/api/orders/:orderId', requireAuth, async (req: Request, res: Res
 
   order.status = OrderStatus.Cancelled
   await order.save()
+
 
   // publish an event saying this was cancelled
   new OrderCancelledPublisher(natsWrapper.client).publish({
