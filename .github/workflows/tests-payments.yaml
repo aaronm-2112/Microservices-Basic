@@ -1,8 +1,9 @@
 name: tests-payments
 
 on: 
-  pull_request
-
+  pull_request:
+    paths:
+      - 'ticketing/payments/**'
 jobs:
   build:
     runs-on: ubuntu-latest 
