@@ -5,10 +5,12 @@ export default ({ url, method, body, onSuccess }) => {
   // method === get | post | patch
   const [errors, setErrors] = useState(null)
 
-  const doRequest = async () => {
+  const doRequest = async (props = {}) => {
     try {
       setErrors(null)
-      const response = await axios[method](url, body)
+      const response = await axios[method](url,
+        { ...body, ...props }
+      )
       // check if the onSuccess callback was provided by the cluent
       if (onSuccess) {
         onSuccess(response.data)

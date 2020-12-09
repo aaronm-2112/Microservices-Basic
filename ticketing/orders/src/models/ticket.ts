@@ -65,7 +65,8 @@ ticketSchema.static('findByEvent', (event: { id: string, version: number }) => {
 // ticket is the ticket we fetched and the orders status is 
 // not cancelled. If we find an order from this, that means
 // the ticket is reserved.
-ticketSchema.method('isReserved', async (): Promise<boolean> => {
+// @ts-ignore
+ticketSchema.methods.isReserved = async function (): Promise<boolean> {
   // this === the ticket document that we called 'isReserved' on
   const existingOrder = await Order.findOne({
     ticket: this,
@@ -78,10 +79,11 @@ ticketSchema.method('isReserved', async (): Promise<boolean> => {
     }
   })
 
+
   // if order exists flip it to false then true
   // if order is null flip it to true then flip it to false
   return !!existingOrder
-})
+}
 
 
 

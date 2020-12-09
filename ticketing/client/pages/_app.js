@@ -8,7 +8,9 @@ const AppComponent = ({ Component, pageProps, currentUser }) => {
   return (
     <div>
       <Header currentUser={currentUser} />
-      <Component {...pageProps} />
+      <div className="container">
+        <Component {...pageProps} currentUser={currentUser} />
+      </div>
     </div>
   )
 }
@@ -26,7 +28,7 @@ AppComponent.getInitialProps = async (appContext) => {
   if (appContext.Component.getInitialProps) {
     // manually execute getInitialProps for the individual pages
     // Recall this no longer auto invokes when we use get props in _app
-    pageProps = await appContext.Component.getInitialProps(appContext.ctx)
+    pageProps = await appContext.Component.getInitialProps(appContext.ctx, client, data.currentUser)
   }
 
   return {

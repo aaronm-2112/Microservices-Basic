@@ -75,3 +75,4 @@ it('publishes a ticket updated event', async () => {
   expect(data.id).toEqual(ticketUpdatedData.orderId)
 
 })
+
