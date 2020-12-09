@@ -1,0 +1,22 @@
+name: deploy-auth 
+
+on: 
+  push:
+    branches:
+      - master # a merge into master counts as a push
+    paths:
+      - 'ticketing/auth/**' # only run if there is a change in the auth directory
+      
+jobs:
+  build:
+    runs-on: ubuntu-latest 
+    steps: 
+      - uses: actions/checkout@v2
+      - run: cd ticketing/auth && docker build -t aaronpazm/auth .
+      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        env:
+          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME }} 
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD }}   
+      - run: docker push aaronpazm/auth
+     
+      
