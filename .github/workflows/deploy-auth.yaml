@@ -12,7 +12,6 @@ jobs:
     runs-on: ubuntu-latest 
     steps: 
       - uses: actions/checkout@v2
-      - run: git submodule init && git submodule update
       - run: cd ticketing/auth && docker build -t aaronpazm/auth .
       - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         env:
