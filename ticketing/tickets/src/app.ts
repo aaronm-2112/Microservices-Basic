@@ -18,7 +18,8 @@ app.set('trust proxy', true)
 app.use(json())
 app.use(cookieSession({
   signed: false,
-  secure: process.env.NODE_ENV !== 'test'
+  // secure: process.env.NODE_ENV !== 'test' -- for when https is added
+  secure: false
 }))
 
 // middleware that sets the users cookie if they are authenticated
