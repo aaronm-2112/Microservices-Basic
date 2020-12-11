@@ -8,7 +8,7 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: 'true'
 spec:
   rules:
-    - host: ticketing.dev
+    - host: www.story-ticketing-web-fun.xyz
       http:
         paths:  # path matching goes in order. First api, then client
           - path: /api/users/?(.*)
