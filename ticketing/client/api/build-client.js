@@ -8,7 +8,8 @@ export default ({ req }) => {
     // we are on the server
 
     return axios.create({
-      baseURL: 'http://ticketing-dev-ingress-nginx-controller.default.svc.cluster.local',
+      // baseURL: 'http://ticketing-dev-ingress-nginx-controller.default.svc.cluster.local',
+      baseURL: 'http://www.story-ticketing-web-fun.xyz/',
       headers: req.headers
     })
   } else {
