@@ -12,17 +12,19 @@ export class OrderCancelledListener extends Listener<OrderCancelledEvent>{
     const order = await Order.findByEvent(
       {
         id: data.id,
-        version: data.version - 1
+        version: data.version
       }
     )
 
-    if (!order) {
-      throw new Error('Order does not exist')
+    // if (!order) {
+    //   throw new Error('Order does not exist')
+    // }
+
+    if (order) {
+      order.set({ status: OrderStatus.Cancelled })
+      await order.save()
+
+      msg.ack()
     }
-
-    order.set({ status: OrderStatus.Cancelled })
-    await order.save()
-
-    msg.ack()
   }
 }
