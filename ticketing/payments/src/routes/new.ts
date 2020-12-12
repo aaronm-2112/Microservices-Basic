@@ -62,7 +62,7 @@ router.post('/api/payments',
     await payment.save()
 
     new PaymentCreatedPublisher(natsWrapper.client).publish({
-      id: payment.id,
+      id: payment.id as string,
       orderId: payment.orderId,
       stripeId: payment.stripeId
     })
