@@ -12,7 +12,7 @@ export class OrderCancelledListener extends Listener<OrderCancelledEvent>{
     const order = await Order.findByEvent(
       {
         id: data.id,
-        version: data.version
+        version: data.version - 1
       }
     )
 
