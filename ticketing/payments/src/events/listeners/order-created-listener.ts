@@ -9,7 +9,7 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent>{
 
   async onMessage(data: OrderCreatedEvent['data'], msg: Message) {
     const order = Order.build({
-      id: data.id,
+      id: data.id as string,
       status: data.status,
       userId: data.userId,
       version: data.version,
