@@ -26,7 +26,7 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
 
     // publish the ticket's new update to its dependent services
     await new TicketUpdatedPublisher(this.client).publish({
-      id: ticket.id,
+      id: ticket.id as string,
       version: ticket.version,
       title: ticket.title,
       price: ticket.price,
