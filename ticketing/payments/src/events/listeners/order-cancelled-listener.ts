@@ -16,15 +16,13 @@ export class OrderCancelledListener extends Listener<OrderCancelledEvent>{
       }
     )
 
-    // if (!order) {
-    //   throw new Error('Order does not exist')
-    // }
-
-    if (order) {
-      order.set({ status: OrderStatus.Cancelled })
-      await order.save()
-
-      msg.ack()
+    if (!order) {
+      throw new Error('Order does not exist')
     }
+
+    order.set({ status: OrderStatus.Cancelled })
+    await order.save()
+
+    msg.ack()
   }
 }
