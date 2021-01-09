@@ -89,6 +89,5 @@ ticketSchema.methods.isReserved = async function (): Promise<boolean> {
 
 const Ticket = mongoose.model<TicketDoc, TicketModel>('Ticket', ticketSchema)
 
-
 export { Ticket }
 

@@ -6,17 +6,17 @@ import { updateIfCurrentPlugin } from 'mongoose-update-if-current'
 export { OrderStatus }
 
 interface OrderAttrs {
+  id: string
   userId: string
   status: OrderStatus
-  expiresAt: Date
   ticket: TicketDoc // used for refs
   email: string
+  version: number
 }
 
 interface OrderDoc extends mongoose.Document {
   userId: string
   status: OrderStatus
-  expiresAt: Date
   ticket: TicketDoc
   version: number
   email: string
@@ -36,10 +36,6 @@ const orderSchema = new mongoose.Schema({
     required: true,
     enum: Object.values(OrderStatus), // has to be one of the enums
     default: OrderStatus.Created
-  },
-  expiresAt: {
-    type: mongoose.Schema.Types.Date,
-    required: false
   },
   ticket: {
     type: mongoose.Schema.Types.ObjectId,
@@ -63,8 +59,16 @@ orderSchema.plugin(updateIfCurrentPlugin)
 
 // order of statics using build and creating the model matters
 orderSchema.static('build', (attrs: OrderAttrs) => {
-  return new Order(attrs)
+  return new Order({
+    _id: attrs.id,
+    version: attrs.version,
+    userId: attrs.userId,
+    status: attrs.status,
+    email: attrs.email,
+    ticket: attrs.ticket
+  })
 })
+
 
 const Order = mongoose.model<OrderDoc, OrderModel>('Order', orderSchema)
 
