@@ -1,4 +1,4 @@
-import { Listener, Subjects, ExpirationCompleteEvent, OrderStatus, OrderCancelledEvent } from '@ecomtickets/common'
+import { Listener, Subjects, ExpirationCompleteEvent, OrderStatus } from '@ecomtickets/common'
 import { queueGroupName } from './queue-group-name'
 import { Message } from 'node-nats-streaming'
 import { Order } from '../../models/order'
