@@ -27,7 +27,7 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
     // Extract the Order data 
     const { id, userId, version, status } = data
 
-    // save the Order 
+    // Create the Order 
     const order = await Order.build({
       id,
       userId,
@@ -36,6 +36,9 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
       ticket,
       email: "falseemail@gmail.com"
     })
+
+    // save the order 
+    await order.save()
 
     // ack the message
     msg.ack()
