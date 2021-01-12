@@ -1,6 +1,6 @@
 // Plan:
 //    1. Create two models: Orders and tickets and all listeners  [Finished]
-//    2. Add email to Orders in all services and in Common for all Order Events
+//    2. Add email the Order model in the Orders service + create OrderCompleteEvent and OrderCompletePublisher [Finished]
 //    3. Create the listener in Email service that listens for OrderComplete 
 //       -Create an OrderComplete event and then have it send from Orders in a publisher
 //       -Send an email to the user with the ticket and order information

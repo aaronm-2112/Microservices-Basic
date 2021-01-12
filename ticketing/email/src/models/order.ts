@@ -10,7 +10,7 @@ interface OrderAttrs {
   userId: string
   status: OrderStatus
   ticket: TicketDoc // used for refs
-  email: string
+  email?: string
   version: number
 }
 
@@ -19,7 +19,7 @@ interface OrderDoc extends mongoose.Document {
   status: OrderStatus
   ticket: TicketDoc
   version: number
-  email: string
+  email: string | undefined
 }
 
 interface OrderModel extends mongoose.Model<OrderDoc> {
@@ -43,7 +43,7 @@ const orderSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true
+    required: false
   }
 }, {
   toJSON: {

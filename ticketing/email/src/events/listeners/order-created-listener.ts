@@ -33,8 +33,7 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
       userId,
       status,
       version,
-      ticket,
-      email: "falseemail@gmail.com"
+      ticket
     })
 
     // save the order 

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import express, { Request, Response } from 'express'
-import { BadRequestError, NotFoundError, OrderStatus, requireAuth, validateRequest } from '@ecomtickets/common'
+import { BadRequestError, NotFoundError, OrderStatus, requireAuth, validateRequest, currentUser } from '@ecomtickets/common'
 import { body } from 'express-validator'
 import { Ticket } from '../models/ticket'
 import { Order } from '../models/order'
@@ -20,6 +20,7 @@ router.post('/api/orders', requireAuth, [
     .custom((input: string) => mongoose.Types.ObjectId.isValid(input))
     .withMessage('TicketId must be provided')
 ], validateRequest,
+  currentUser,
   async (req: Request, res: Response) => {
     const { ticketId } = req.body
 
@@ -39,11 +40,16 @@ router.post('/api/orders', requireAuth, [
     const expiration = new Date()
     expiration.setSeconds(expiration.getSeconds() + EXPIRATION_WINDOW_SECONDS)
 
+    // get the current user email
+    const email = req.currentUser!.email
+
+
     // Build the order and save it to the database 
     const order = Order.build({
       userId: req.currentUser!.id,
       status: OrderStatus.Created,
       expiresAt: expiration,
+      email,
       ticket
     })
     await order.save()
