@@ -1,4 +1,5 @@
 import { Message } from 'node-nats-streaming'
+import sgMail from '@sendgrid/mail'
 // import the OrderCompleted event
 import { Listener, NotFoundError, OrderCompleteEvent, Subjects } from '@ecomtickets/common'
 // import the stan client 
@@ -35,6 +36,26 @@ export class OrderCompleteListener extends Listener<OrderCompleteEvent> {
 
     // Query for the ticket with the associated orderid and version 
     const ticket: TicketDoc = await Ticket.findById(data.id)
+
+    // TODO: Set the key elsewhere 
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY!))
+
+    const emailContents = {
+      to: 'aaron.marroquin96@gmail.com', // Change to your recipient
+      from: 'aaron.marroquin96@gmail.com', // Change to your verified sender
+      subject: 'Sending with SendGrid is Fun',
+      text: 'and easy to do anywhere, even with Node.js',
+      html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+    }
+    sgMail
+      .send(emailContents)
+      .then(() => {
+        console.log('Email sent')
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+
 
     //    create an email data object 
     //    provide the email to sendgrid and send the email  
