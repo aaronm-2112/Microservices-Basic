@@ -3,14 +3,14 @@ kind: Config
 deploy: 
   kubectl: 
     manifests:
-      - ./infra/k8s/*
+      - ./infra/k8s/**
       - ./infra/k8s-dev
 build:
-  googleCloudBuild:
-    projectId: ticketing-dev-293022
+  # googleCloudBuild:
+  #   projectId: ticketing-dev-293022
   artifacts:
-    - #image: aaronpazm/auth
-      image: us.gcr.io/ticketing-dev-293022/auth
+    - image: aaronpazm/auth
+      # image: us.gcr.io/ticketing-dev-293022/auth
       context: auth 
       docker:
         dockerfile: Dockerfile 
@@ -18,8 +18,8 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-    - #image: aaronpazm/client
-      image: us.gcr.io/ticketing-dev-293022/client
+    - image: aaronpazm/client
+      # image: us.gcr.io/ticketing-dev-293022/client
       context: client 
       docker:
         dockerfile: Dockerfile 
@@ -27,8 +27,8 @@ build:
         manual:
           - src: '**/*.js'
             dest: .
-    - #image: aaronpazm/tickets
-      image: us.gcr.io/ticketing-dev-293022/tickets
+    - image: aaronpazm/tickets
+      # image: us.gcr.io/ticketing-dev-293022/tickets
       context: tickets 
       docker:
         dockerfile: Dockerfile 
@@ -36,8 +36,8 @@ build:
         manual:
           - src: '**/*.ts'
             dest: .
-    - #image: aaronpazm/orders
-      image: us.gcr.io/ticketing-dev-293022/orders
+    - image: aaronpazm/orders
+      # image: us.gcr.io/ticketing-dev-293022/orders
       context: orders 
       docker:
         dockerfile: Dockerfile 
@@ -45,8 +45,8 @@ build:
         manual:
           - src: '**/*.ts'
             dest: .
-    - #image: aaronpazm/expiration
-      image: us.gcr.io/ticketing-dev-293022/expiration
+    - image: aaronpazm/expiration
+      # image: us.gcr.io/ticketing-dev-293022/expiration
       context: expiration 
       docker:
         dockerfile: Dockerfile 
@@ -54,12 +54,20 @@ build:
         manual:
           - src: '**/*.ts'
             dest: .
-    - #image: aaronpazm/payments
-      image: us.gcr.io/ticketing-dev-293022/payments
+    - image: aaronpazm/payments
+      # image: us.gcr.io/ticketing-dev-293022/payments
       context: payments 
       docker:
         dockerfile: Dockerfile 
       sync:
+        manual:
+          - src: '**/*.ts'
+            dest: .
+    - image: aaronpazm/email
+      context: email
+      docker: 
+        dockerfile: Dockerfile
+      sync: 
         manual:
           - src: '**/*.ts'
             dest: .

@@ -7,8 +7,8 @@
 //    3.5: Create testes to ensure the listener is functioning properly [ Goal for 1/15]
 //    4. Allow a user to manually resend a verification email to themselves using the Email service 
 //    4.5: Create tests to ensure a user is able to properly manually resend a verificvation email
-//    5. Create the infra files
-//    6. Add to Skaffold?
+//    5. Create the infra files [WIP]
+//    6. Add to Skaffold [done]
 //    7. Add service to the CI/CD pipeline 
 
 import express from 'express'

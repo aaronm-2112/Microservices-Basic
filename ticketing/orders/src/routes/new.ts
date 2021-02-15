@@ -31,7 +31,7 @@ router.post('/api/orders', requireAuth, [
     }
 
     // Check if the ticket has already been reserved
-    const isReserved = await ticket.isReserved()
+    const isReserved = await Ticket.isReserved(ticket)
     if (isReserved) {
       throw new BadRequestError('Ticket is already reserved')
     }
