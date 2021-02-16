@@ -56,10 +56,6 @@ export class OrderCompleteListener extends Listener<OrderCompleteEvent> {
         console.error(error)
       })
 
-
-    //    create an email data object 
-    //    provide the email to sendgrid and send the email  
-
     msg.ack()
   }
 
