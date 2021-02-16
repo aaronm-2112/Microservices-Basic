@@ -31,7 +31,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: jwt-secret
-                  key: JWT_KEY 
+                  key: JWT_KEY
+            - name: SENDGRID_API_KEY
+              valueFrom: 
+                secretKeyRef:
+                  name: sendgrid-secret 
+                  key:  SENDGRID_API_KEY 
 ---
 apiVersion: v1
 kind: Service 
