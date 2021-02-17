@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import { app } from './app'
 import { natsWrapper } from './nats-wrapper'
+import {Listener} from '@ecomtickets/common'
 
 
 const start = async () => {
