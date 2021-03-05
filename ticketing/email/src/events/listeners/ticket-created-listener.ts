@@ -1,20 +1,31 @@
-import { Message } from 'node-nats-streaming'
-import { Subjects, Listener, TicketCreatedEvent } from '@ecomtickets/common'
-import { Ticket } from '../../models/ticket'
-import { queueGroupName } from '../listeners/queue-group-name'
+import { Message } from "node-nats-streaming";
+import {
+  Subjects,
+  Listener,
+  TicketCreatedEvent,
+} from "@ecomtest/tickets-common";
+import { Ticket } from "../../models/ticket";
+import { queueGroupName } from "../listeners/queue-group-name";
 
-export class TicketCreatedListener extends Listener<TicketCreatedEvent>{
-  readonly subject = Subjects.TicketCreated
-  readonly queueGroupName = queueGroupName
+export class TicketCreatedListener extends Listener<TicketCreatedEvent> {
+  readonly subject = Subjects.TicketCreated;
+  readonly queueGroupName = queueGroupName;
 
-  async onMessage(data: TicketCreatedEvent['data'], msg: Message) {
-    const { title, price, id } = data
+  async onMessage(data: TicketCreatedEvent["data"], msg: Message) {
+    const { title, price, id } = data;
 
     const ticket = Ticket.build({
-      id, title, price
-    })
-    await ticket.save()
+      id,
+      title,
+      price,
+    });
+    await ticket.save();
 
-    msg.ack()
+    const tickets = await Ticket.find({});
+    if (tickets) {
+      throw new Error("ticket not found");
+    }
+
+    msg.ack();
   }
 }

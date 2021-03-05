@@ -3,7 +3,11 @@ import "express-async-errors"; //allows synchronous error handling middleware to
 import { json } from "body-parser";
 import cookieSession from "cookie-session";
 
-import { errorHandler, NotFoundError, currentUser } from "@ecomtickets/common";
+import {
+  errorHandler,
+  NotFoundError,
+  currentUser,
+} from "@ecomtest/tickets-common";
 
 import { newOrderRouter } from "./routes/new";
 import { showOrderRouter } from "./routes/show";

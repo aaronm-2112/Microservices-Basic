@@ -1,28 +1,31 @@
-import { Message } from 'node-nats-streaming'
-import { Listener, OrderCreatedEvent, Subjects } from '@ecomtickets/common'
-import { queueGroupName } from './queue-group-name'
-import { Ticket } from '../../models/ticket'
-import { TicketUpdatedPublisher } from '../publishers/ticket-updated-publisher'
-
+import { Message } from "node-nats-streaming";
+import {
+  Listener,
+  OrderCreatedEvent,
+  Subjects,
+} from "@ecomtest/tickets-common";
+import { queueGroupName } from "./queue-group-name";
+import { Ticket } from "../../models/ticket";
+import { TicketUpdatedPublisher } from "../publishers/ticket-updated-publisher";
 
 export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
-  readonly queueGroupName = queueGroupName
-  readonly subject = Subjects.OrderCreated
+  readonly queueGroupName = queueGroupName;
+  readonly subject = Subjects.OrderCreated;
 
-  async onMessage(data: OrderCreatedEvent['data'], msg: Message) {
-    console.log(data)
+  async onMessage(data: OrderCreatedEvent["data"], msg: Message) {
+    console.log(data);
     // Find the ticket that the order is reserving
-    const ticket = await Ticket.findById(data.ticket.id)
+    const ticket = await Ticket.findById(data.ticket.id);
 
-    // If no ticket, throw error 
+    // If no ticket, throw error
     if (!ticket) {
-      throw new Error('Ticket not found')
+      throw new Error("Ticket not found");
     }
     // Mark the ticket as being reserved by setting its orderId property
-    ticket.set({ orderId: data.id })
+    ticket.set({ orderId: data.id });
 
-    // Save the ticket 
-    await ticket.save()
+    // Save the ticket
+    await ticket.save();
 
     // publish the ticket's new update to its dependent services
     await new TicketUpdatedPublisher(this.client).publish({
@@ -31,10 +34,10 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
       title: ticket.title,
       price: ticket.price,
       userId: ticket.userId,
-      orderId: ticket.orderId
-    })
+      orderId: ticket.orderId,
+    });
 
     // ack the message
-    msg.ack()
+    msg.ack();
   }
 }

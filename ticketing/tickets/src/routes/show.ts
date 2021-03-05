@@ -1,17 +1,17 @@
-import { NotFoundError } from '@ecomtickets/common'
-import express, { Request, Response } from 'express'
-import { Ticket } from '../models/ticket'
+import { NotFoundError } from "@ecomtest/tickets-common";
+import express, { Request, Response } from "express";
+import { Ticket } from "../models/ticket";
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/api/tickets/:id', async (req: Request, res: Response) => {
-  const ticket = await Ticket.findById(req.params.id)
+router.get("/api/tickets/:id", async (req: Request, res: Response) => {
+  const ticket = await Ticket.findById(req.params.id);
 
   if (!ticket) {
-    throw new NotFoundError()
+    throw new NotFoundError();
   }
 
-  res.status(200).send(ticket)
-})
+  res.status(200).send(ticket);
+});
 
-export { router as showTicketRouter }
+export { router as showTicketRouter };

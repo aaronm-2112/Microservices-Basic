@@ -1,35 +1,40 @@
-import { Message } from 'node-nats-streaming'
-import { Listener, NotFoundError, Subjects, TicketUpdatedEvent } from '@ecomtickets/common'
-import { queueGroupName } from './queue-group-name'
-import { Ticket, TicketDoc } from '../../models/ticket'
+import { Message } from "node-nats-streaming";
+import {
+  BadRequestError,
+  CustomError,
+  Listener,
+  NotFoundError,
+  Subjects,
+  TicketUpdatedEvent,
+} from "@ecomtest/tickets-common";
+import { queueGroupName } from "./queue-group-name";
+import { Ticket } from "../../models/ticket";
 
 export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
-  readonly queueGroupName = queueGroupName
-  readonly subject = Subjects.TicketUpdate
+  readonly queueGroupName = queueGroupName;
+  readonly subject = Subjects.TicketUpdate;
 
-  async onMessage(data: TicketUpdatedEvent['data'], msg: Message) {
-    // Extract the updated ticket data 
-    const { id, version, title, price, userId, orderId } = data
+  async onMessage(data: TicketUpdatedEvent["data"], msg: Message) {
+    // Find the ticket
+    const ticket = await Ticket.findById(data.id);
 
-    // Find the ticket 
-    const ticket: TicketDoc = await Ticket.findOne({
-      _id: id,
-      version: version - 1
-    })
-
-    // Check if the ticket exists 
+    // check if it exists
     if (!ticket) {
-      throw new NotFoundError()
+      const tickets = await Ticket.find({});
+      throw new BadRequestError(
+        `Here are the tickets that have been created: ${tickets}`
+      );
     }
+    // Extract the updated ticket data
+    const { id, version, title, price, userId, orderId } = data;
 
     // Update the ticket
-    ticket.set({ version, title, price, userId, orderId })
+    ticket.set({ version, title, price, userId, orderId });
 
     // Save the ticket
-    await ticket.save()
+    await ticket.save();
 
     // ack the message
-    msg.ack()
+    msg.ack();
   }
 }
-

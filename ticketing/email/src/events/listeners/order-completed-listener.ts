@@ -1,62 +1,66 @@
-import { Message } from 'node-nats-streaming'
-import sgMail from '@sendgrid/mail'
+import { Message } from "node-nats-streaming";
+import sgMail from "../../send-grid-email-service";
 // import the OrderCompleted event
-import { Listener, NotFoundError, OrderCompleteEvent, Subjects } from '@ecomtickets/common'
-// import the stan client 
-import { queueGroupName } from './queue-group-name'
-import { Order } from '../../models/order'
-import { Ticket, TicketDoc } from '../../models/ticket'
+import {
+  Listener,
+  NotFoundError,
+  OrderCompleteEvent,
+  OrderStatus,
+  Subjects,
+} from "@ecomtest/tickets-common";
+// import the stan client
+import { queueGroupName } from "./queue-group-name";
+import { Order } from "../../models/order";
+import { Ticket, TicketDoc } from "../../models/ticket";
 // import the queuegroupname
 
-// setup the listener 
+// setup the listener
 export class OrderCompleteListener extends Listener<OrderCompleteEvent> {
-  readonly subject = Subjects.OrderComplete
-  readonly queueGroupName = queueGroupName
+  readonly subject = Subjects.OrderComplete;
+  readonly queueGroupName = queueGroupName;
 
-  async onMessage(data: OrderCompleteEvent['data'], msg: Message) {
-
+  async onMessage(data: OrderCompleteEvent["data"], msg: Message) {
     // Extract the orderid, email, and status of the completed order
-    const { id, email, status, version } = data
+    const { id, email, status, version } = data;
     // Query for the completed order with mongoose
     const order = await Order.findOne({
       _id: id,
-      version: version - 1
-    })
+      version: version - 1,
+    });
 
-    // Ensure the order exists 
+    // Ensure the order exists
     if (!order) {
-      throw new NotFoundError()
+      throw new NotFoundError();
     }
 
-    // Mark the order as complete 
-    order.set({ status: Subjects.OrderComplete })
+    // Mark the order as complete
+    order.set({ status: OrderStatus.Complete });
 
     // Save the order
-    await order.save()
+    await order.save();
 
-    // Query for the ticket with the associated orderid and version 
-    const ticket: TicketDoc = await Ticket.findById(data.id)
+    // Query for the ticket with the associated orderid and version
+    const ticket: TicketDoc = await Ticket.findById(data.id);
 
-    // TODO: Set the key elsewhere 
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY!))
-
+    // Create the email data object
     const emailContents = {
-      to: 'aaron.marroquin96@gmail.com', // Change to your recipient
-      from: 'aaron.marroquin96@gmail.com', // Change to your verified sender
-      subject: 'Sending with SendGrid is Fun',
-      text: 'and easy to do anywhere, even with Node.js',
-      html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-    }
+      to: `${email}`,
+      from: "aaron.marroquin96@gmail.com", // TODO: Make an environment variable
+      subject: `Order Confirmation From Ticketing.io For Order ${id}`,
+      text: `This is a confirmation for your purchase of ${ticket.title} for $${ticket.price}.`,
+    };
+
+    // Provide the email to sendgrid and send the email
     sgMail
       .send(emailContents)
       .then(() => {
-        console.log('Email sent')
+        console.log("Email sent");
       })
       .catch((error) => {
-        console.error(error)
-      })
+        console.error(error);
+      });
 
-    msg.ack()
+    // Ack the message whether the email failed or succeded
+    msg.ack();
   }
-
 }

@@ -1,69 +1,72 @@
-import { OrderStatus } from '@ecomtickets/common';
-import mongoose from 'mongoose'
-import { updateIfCurrentPlugin } from 'mongoose-update-if-current'
+import { OrderStatus } from "@ecomtest/tickets-common";
+import mongoose from "mongoose";
+import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 
 interface OrderAttrs {
-  id: string
-  version: number
-  userId: string
-  status: OrderStatus
-  price: number // the price of the ticket associated with the order 
+  id: string;
+  version: number;
+  userId: string;
+  status: OrderStatus;
+  price: number; // the price of the ticket associated with the order
 }
 
 interface OrderDoc extends mongoose.Document {
-  version: number
-  userId: string
-  price: number
-  status: OrderStatus
+  version: number;
+  userId: string;
+  price: number;
+  status: OrderStatus;
 }
 
 interface OrderModel extends mongoose.Model<OrderDoc> {
-  build(attrs: OrderAttrs): OrderDoc
-  findByEvent(event: { id: string, version: number }): Promise<OrderDoc | null>
+  build(attrs: OrderAttrs): OrderDoc;
+  findByEvent(event: { id: string; version: number }): Promise<OrderDoc | null>;
 }
 
-const orderSchema = new mongoose.Schema({
-  userId: {
-    type: String,
-    required: true
+const orderSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    status: {
+      type: String,
+      required: true,
+    },
   },
-  price: {
-    type: Number,
-    required: true
-  },
-  status: {
-    type: String,
-    required: true
+  {
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+      },
+    },
   }
-}, {
-  toJSON: {
-    transform(doc, ret) {
-      ret.id = ret._id
-      delete ret._id
-    }
-  }
-})
+);
 
-orderSchema.set('versionKey', 'version')
-orderSchema.plugin(updateIfCurrentPlugin)
+orderSchema.set("versionKey", "version");
+orderSchema.plugin(updateIfCurrentPlugin);
 
-orderSchema.static('build', (attrs: OrderAttrs) => {
+orderSchema.static("build", (attrs: OrderAttrs) => {
   return new Order({
     _id: attrs.id,
     version: attrs.version,
     price: attrs.price,
     userId: attrs.userId,
-    status: attrs.status
-  })
-})
+    status: attrs.status,
+  });
+});
 
-orderSchema.static('findByEvent', (event: { id: string, version: number }) => {
+orderSchema.static("findByEvent", (event: { id: string; version: number }) => {
   return Order.findOne({
     _id: event.id,
-    version: event.version - 1
-  })
-})
+    version: event.version - 1,
+  });
+});
 
-const Order = mongoose.model<OrderDoc, OrderModel>('Order', orderSchema)
+const Order = mongoose.model<OrderDoc, OrderModel>("Order", orderSchema);
 
-export { Order }
+export { Order };
