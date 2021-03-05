@@ -1,0 +1,52 @@
+apiVersion: apps/v1 
+kind: Deployment 
+metadata:
+  name: email-depl 
+spec: 
+  replicas: 1 
+  selector: 
+    matchLabels:
+      app: email 
+  template:
+    metadata:
+      labels:
+        app: email
+    spec:
+      containers:
+        - name: email 
+          # image: us.gcr.io/ticketing-dev-293022/email
+          image: aaronpazm/email
+          env: 
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name 
+            - name: NATS_URL
+              value: 'http://nats-srv:4222'
+            - name: NATS_CLUSTER_ID
+              value: ticketing
+            - name: MONGO_URI
+              value: 'mongodb://email-mongo-srv:27017/email' 
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: SENDGRID_API_KEY
+              valueFrom: 
+                secretKeyRef:
+                  name: sendgrid-secret 
+                  key:  SENDGRID_API_KEY 
+---
+apiVersion: v1
+kind: Service 
+metadata:
+  name: email-srv 
+spec:
+  selector:
+    app: email 
+  ports:
+    - name: email 
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

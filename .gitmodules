@@ -1,3 +1,6 @@
 [submodule "path_to_submodule"] 
   path = ticketing/common 
   url = https://www.npmjs.com/package/@ecomtickets/common
+[submodule "ticketing/ticketing-common"]
+	path = ticketing/ticketing-common
+	url = https://github.com/aaronm-2112/tickets-common.git

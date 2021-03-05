@@ -1,59 +1,73 @@
-apiVersion: skaffold/v2alpha3 
-kind: Config 
-deploy: 
-  kubectl: 
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
     manifests:
-      - ./infra/k8s/*
+      - ./infra/k8s/**
       - ./infra/k8s-dev
 build:
-  googleCloudBuild:
-    projectId: ticketing-dev-293022
+  # googleCloudBuild:
+  #   projectId: ticketing-dev-293022
   artifacts:
-    - image: us.gcr.io/ticketing-dev-293022/auth
-      context: auth 
+    - image: aaronpazm/auth
+      # image: us.gcr.io/ticketing-dev-293022/auth
+      context: auth
       docker:
-        dockerfile: Dockerfile 
+        dockerfile: Dockerfile
       sync:
         manual:
-          - src: 'src/**/*.ts'
+          - src: "src/**/*.ts"
             dest: .
-    - image: us.gcr.io/ticketing-dev-293022/client
-      context: client 
+    - image: aaronpazm/client
+      # image: us.gcr.io/ticketing-dev-293022/client
+      context: client
       docker:
-        dockerfile: Dockerfile 
+        dockerfile: Dockerfile
       sync:
         manual:
-          - src: '**/*.js'
+          - src: "**/*.js"
             dest: .
-    - image: us.gcr.io/ticketing-dev-293022/tickets
-      context: tickets 
+    - image: aaronpazm/tickets
+      # image: us.gcr.io/ticketing-dev-293022/tickets
+      context: tickets
       docker:
-        dockerfile: Dockerfile 
+        dockerfile: Dockerfile
       sync:
         manual:
-          - src: '**/*.ts'
+          - src: "**/*.ts"
             dest: .
-    - image: us.gcr.io/ticketing-dev-293022/orders
-      context: orders 
+    - image: aaronpazm/orders
+      # image: us.gcr.io/ticketing-dev-293022/orders
+      context: orders
       docker:
-        dockerfile: Dockerfile 
+        dockerfile: Dockerfile
       sync:
         manual:
-          - src: '**/*.ts'
+          - src: "**/*.ts"
             dest: .
-    - image: us.gcr.io/ticketing-dev-293022/expiration
-      context: expiration 
+    - image: aaronpazm/expiration
+      # image: us.gcr.io/ticketing-dev-293022/expiration
+      context: expiration
       docker:
-        dockerfile: Dockerfile 
+        dockerfile: Dockerfile
       sync:
         manual:
-          - src: '**/*.ts'
+          - src: "**/*.ts"
             dest: .
-    - image: us.gcr.io/ticketing-dev-293022/payments
-      context: payments 
+    - image: aaronpazm/payments
+      # image: us.gcr.io/ticketing-dev-293022/payments
+      context: payments
       docker:
-        dockerfile: Dockerfile 
+        dockerfile: Dockerfile
       sync:
         manual:
-          - src: '**/*.ts'
+          - src: "**/*.ts"
+            dest: .
+    - image: aaronpazm/email
+      context: email
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "**/*.ts"
             dest: .
